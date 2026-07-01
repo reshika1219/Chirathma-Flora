@@ -5,13 +5,15 @@ import './styles.css';
 
 const phone = '94771114345';
 const facebook = 'https://www.facebook.com/chirathmaflora/';
+const instagram = 'https://www.instagram.com/chirathma_flora/';
+const tiktok = 'https://www.tiktok.com/@chirathma_flora';
 const collections = [
-  { type: 'Weddings', title: 'Ivory Afterglow', meta: 'Poruwa · Reception', img: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1300&q=85' },
-  { type: 'Birthdays', title: 'A Little Wild', meta: 'Garden · Milestone', img: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1300&q=85' },
-  { type: 'Weddings', title: 'The Modern Poruwa', meta: 'Ceremony · Florals', img: '/chirathma-hero.png' },
-  { type: 'Parties', title: 'Golden Hour', meta: 'Dinner · Celebration', img: 'https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=1300&q=85' },
-  { type: 'Weddings', title: 'Blush Reverie', meta: 'Homecoming · Stage', img: 'https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=1300&q=85' },
-  { type: 'Corporate', title: 'Botanical Edit', meta: 'Launch · Tablescape', img: 'https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=1300&q=85' },
+  { type: 'Birthdays', title: 'Double the Joy', meta: 'Balloon installation · Milestone', img: '/work-01.jpg' },
+  { type: 'Birthdays', title: 'A Little Gentleman', meta: 'Portrait corner · Celebration', img: '/work-02.jpg' },
+  { type: 'Birthdays', title: 'Thivein Turns One', meta: 'Garden party · Cake styling', img: '/work-03.jpg' },
+  { type: 'Birthdays', title: 'Blue Skies', meta: 'Outdoor setup · First birthday', img: '/work-04.jpg' },
+  { type: 'Birthdays', title: 'Golden Thirty-Six', meta: 'Birthday backdrop · Floral detail', img: '/work-05.jpg' },
+  { type: 'Ceremonies', title: 'Blessed Beginnings', meta: 'Traditional ceremony · Floral stage', img: '/work-06.jpg' },
 ];
 
 const steps = [
@@ -75,7 +77,7 @@ function App() {
 
     <section className="work" id="work">
       <div className="work-head"><div><span className="section-no light">02 — SELECTED CELEBRATIONS</span><h2>Made for<br/><em>your moment.</em></h2></div>
-        <div className="filters">{['All','Weddings','Birthdays','Parties','Corporate'].map(f => <button className={filter===f?'active':''} onClick={()=>setFilter(f)} key={f}>{f}</button>)}</div>
+        <div className="filters">{['All','Birthdays','Ceremonies'].map(f => <button className={filter===f?'active':''} onClick={()=>setFilter(f)} key={f}>{f}</button>)}</div>
       </div>
       <div className="gallery">
         {filtered.map((item, i) => <article key={item.title} className={i===slide?'featured':''}>
@@ -112,7 +114,7 @@ function App() {
       <form onSubmit={e=>{e.preventDefault();setSent(true)}}>{sent ? <div className="success"><Check/><h3>Your story is on its way.</h3><p>Thank you. We’ll be in touch shortly.</p><button onClick={()=>setSent(false)} type="button">Send another enquiry</button></div> : <><label>Your name<input required placeholder="e.g. Nethmi & Kasun"/></label><label>Phone / WhatsApp<input required type="tel" placeholder="07X XXX XXXX"/></label><div className="form-row"><label>Occasion<select><option>Wedding</option><option>Birthday</option><option>Private party</option><option>Corporate event</option></select></label><label>Event date<input type="date"/></label></div><label>Tell us about your vision<textarea placeholder="The mood, venue, guest count, colours you love..."/></label><button className="full-btn">Send my enquiry <ArrowRight/></button></>}</form>
     </section>
 
-    <footer><a className="brand" href="#top"><img src="/chirathma-logo.jpg" alt=""/><span>CHIRATHMA<small>FLORA · POLGAHAWELA</small></span></a><p>No. 110/2, Colombo Road, Polgahawela, Sri Lanka</p><div><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={whatsapp} target="_blank" rel="noreferrer">WhatsApp</a><a href="tel:+94771114345">Call</a><a href="#top">Back to top ↑</a></div><small>© {new Date().getFullYear()} CHIRATHMA FLORA. MADE WITH CARE.</small></footer>
+    <footer><a className="brand" href="#top"><img src="/chirathma-logo.jpg" alt=""/><span>CHIRATHMA<small>FLORA · POLGAHAWELA</small></span></a><p>No. 110/2, Colombo Road, Polgahawela, Sri Lanka</p><div><a href={instagram} target="_blank" rel="noreferrer">Instagram</a><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={tiktok} target="_blank" rel="noreferrer">TikTok</a><a href={whatsapp} target="_blank" rel="noreferrer">WhatsApp</a><a href="tel:+94771114345">Call</a><a href="#top">Back to top ↑</a></div><small>© {new Date().getFullYear()} CHIRATHMA FLORA. MADE WITH CARE.</small></footer>
   </main>
 }
 

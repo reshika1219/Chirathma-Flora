@@ -27,6 +27,7 @@
 .inquire label{font-size:10px}
 footer>p{font-size:12px}
 footer>div{font-size:11px}
+footer>div{gap:16px;flex-wrap:wrap;row-gap:9px}
 footer>small{font-size:9px}
 
 @media(max-width:800px){
@@ -34,5 +35,4 @@ footer>small{font-size:9px}
   .hero-copy p{font-size:15px;line-height:1.7}
   .service-grid p,.steps p{font-size:14px}
 }
-
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-image{transform:none!important}*{transition:none!important}}
