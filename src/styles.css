@@ -5,6 +5,7 @@
 
 /* Readability pass: preserve the editorial hierarchy while removing overly tiny UI text. */
 .brand small{font-size:9px}
+.brand>img{width:42px;height:42px;object-fit:cover;border-radius:50%;background:#fff;box-shadow:0 0 0 1px #ffffff2e}
 .nav nav{font-size:13px}
 .eyebrow,.hero-note{font-size:11px}
 .scroll-note{font-size:9px}

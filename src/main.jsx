@@ -4,6 +4,7 @@ import { ArrowDownRight, ArrowRight, Check, ChevronLeft, ChevronRight, Flower2, 
 import './styles.css';
 
 const phone = '94771114345';
+const facebook = 'https://www.facebook.com/chirathmaflora/';
 const collections = [
   { type: 'Weddings', title: 'Ivory Afterglow', meta: 'Poruwa · Reception', img: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1300&q=85' },
   { type: 'Birthdays', title: 'A Little Wild', meta: 'Garden · Milestone', img: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1300&q=85' },
@@ -41,7 +42,7 @@ function App() {
 
   return <main>
     <header className="nav">
-      <a className="brand" href="#top" aria-label="Chirathma Flora home"><Flower2/><span>CHIRATHMA<small>FLORA · POLGAHAWELA</small></span></a>
+      <a className="brand" href="#top" aria-label="Chirathma Flora home"><img src="/chirathma-logo.jpg" alt=""/><span>CHIRATHMA<small>FLORA · POLGAHAWELA</small></span></a>
       <nav className={menu ? 'open' : ''}>
         <a href="#work" onClick={() => setMenu(false)}>Our work</a><a href="#services" onClick={() => setMenu(false)}>Services</a><a href="#story" onClick={() => setMenu(false)}>Our story</a>
         <a className="nav-cta" href="#inquire" onClick={() => setMenu(false)}>Plan your event <ArrowDownRight size={17}/></a>
@@ -111,7 +112,7 @@ function App() {
       <form onSubmit={e=>{e.preventDefault();setSent(true)}}>{sent ? <div className="success"><Check/><h3>Your story is on its way.</h3><p>Thank you. We’ll be in touch shortly.</p><button onClick={()=>setSent(false)} type="button">Send another enquiry</button></div> : <><label>Your name<input required placeholder="e.g. Nethmi & Kasun"/></label><label>Phone / WhatsApp<input required type="tel" placeholder="07X XXX XXXX"/></label><div className="form-row"><label>Occasion<select><option>Wedding</option><option>Birthday</option><option>Private party</option><option>Corporate event</option></select></label><label>Event date<input type="date"/></label></div><label>Tell us about your vision<textarea placeholder="The mood, venue, guest count, colours you love..."/></label><button className="full-btn">Send my enquiry <ArrowRight/></button></>}</form>
     </section>
 
-    <footer><a className="brand" href="#top"><Flower2/><span>CHIRATHMA<small>FLORA · POLGAHAWELA</small></span></a><p>No. 110/2, Colombo Road, Polgahawela, Sri Lanka</p><div><a href={whatsapp} target="_blank" rel="noreferrer">WhatsApp</a><a href="tel:+94771114345">Call</a><a href="#top">Back to top ↑</a></div><small>© {new Date().getFullYear()} CHIRATHMA FLORA. MADE WITH CARE.</small></footer>
+    <footer><a className="brand" href="#top"><img src="/chirathma-logo.jpg" alt=""/><span>CHIRATHMA<small>FLORA · POLGAHAWELA</small></span></a><p>No. 110/2, Colombo Road, Polgahawela, Sri Lanka</p><div><a href={facebook} target="_blank" rel="noreferrer">Facebook</a><a href={whatsapp} target="_blank" rel="noreferrer">WhatsApp</a><a href="tel:+94771114345">Call</a><a href="#top">Back to top ↑</a></div><small>© {new Date().getFullYear()} CHIRATHMA FLORA. MADE WITH CARE.</small></footer>
   </main>
 }
 
