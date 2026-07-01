@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowDownRight, ArrowRight, ArrowUp, Check, ChevronLeft, ChevronRight,
@@ -268,6 +268,7 @@ function App() {
   const [mood, setMood] = useState('Romantic');
   const [palette, setPalette] = useState('Ivory & Sage');
 
+  const viewportRef = useRef(null);
   const trackRef = useRef(null);
   const filtered = useMemo(
     () => filter === 'All' ? collections : collections.filter(x => x.type === filter),
@@ -297,19 +298,28 @@ function App() {
   // Reset slide on filter change
   useEffect(() => { setSlide(0); }, [filter]);
 
-  // Carousel scroll
+  // Keep the selected card visible without translating beyond the track.
+  const positionCarousel = useCallback(() => {
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+    const card = track?.children[slide];
+    if (!viewport || !track || !card) return;
+
+    const viewportPadding = Number.parseFloat(getComputedStyle(viewport).paddingLeft) || 0;
+    const visibleWidth = viewport.clientWidth - viewportPadding;
+    const maxOffset = Math.max(0, track.scrollWidth - visibleWidth);
+    const offset = Math.min(card.offsetLeft, maxOffset);
+    track.style.transform = `translate3d(-${offset}px, 0, 0)`;
+  }, [slide]);
+
+  useLayoutEffect(() => {
+    positionCarousel();
+  }, [positionCarousel, filtered]);
+
   useEffect(() => {
-    if (!trackRef.current) return;
-    const cards = trackRef.current.children;
-    if (!cards[slide]) return;
-    const trackLeft = trackRef.current.getBoundingClientRect().left;
-    const cardLeft = cards[slide].getBoundingClientRect().left;
-    const currentTransform = new DOMMatrixReadOnly(
-      getComputedStyle(trackRef.current).transform
-    ).m41 || 0;
-    const offset = cardLeft - trackLeft - currentTransform;
-    trackRef.current.style.transform = `translateX(-${Math.max(0, offset)}px)`;
-  }, [slide, filtered]);
+    window.addEventListener('resize', positionCarousel);
+    return () => window.removeEventListener('resize', positionCarousel);
+  }, [positionCarousel]);
 
   const next = useCallback((d) => {
     setSlide(prev => (prev + d + filtered.length) % filtered.length);
@@ -423,7 +433,7 @@ function App() {
             </div>
           </div>
 
-          <div className="carousel-viewport">
+          <div className="carousel-viewport" ref={viewportRef}>
             <div className="carousel-track" ref={trackRef} role="list">
               {filtered.map((item, i) => (
                 <article
