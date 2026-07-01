@@ -3,4 +3,35 @@
 @media(max-width:800px){.nav{height:72px;padding:0 20px}.nav nav{display:none;position:absolute;top:72px;left:0;width:100%;height:calc(100vh - 72px);background:#0a1d15;padding:50px 25px;flex-direction:column;align-items:flex-start;font-size:16px}.nav nav.open{display:flex}.menu{display:block}.hero{min-height:680px}.hero-image{object-position:60% center}.hero-shade{background:linear-gradient(90deg,rgba(4,15,11,.9),rgba(4,15,11,.27)),linear-gradient(0deg,rgba(4,15,11,.8),transparent)}.hero-copy{left:25px;top:29%}.hero-copy p{font-size:14px}.eyebrow{left:25px}.hero-note{left:25px;right:auto;bottom:5%;gap:35px}.scroll-note{display:none}.intro{padding:90px 25px;grid-template-columns:1fr}.intro .line-flower{display:none}.work{padding-top:85px}.work-head{padding:0 25px 40px;display:block}.filters{justify-content:flex-start;margin-top:30px}.gallery{padding-left:25px;height:420px}.gallery article{min-width:38vw}.gallery article.featured{min-width:78vw}.gallery-controls{padding-right:25px}.services{padding:90px 25px}.service-grid{grid-template-columns:1fr 1fr}.service-grid article:nth-child(2){border-right:0}.builder{grid-template-columns:1fr}.builder-copy{min-height:500px;padding:80px 25px}.builder-card{margin:30px 20px;padding:25px}.process{padding:90px 25px}.process-title{display:block}.steps{grid-template-columns:1fr}.steps article{border-right:0;border-bottom:1px solid #bbc6bd;padding:25px 0!important;min-height:auto}.steps h3{margin-top:25px}.inquire{grid-template-columns:1fr;padding:90px 25px}.contact-lines{flex-direction:column;gap:12px}footer{grid-template-columns:1fr}footer>div{justify-content:flex-start}footer>small{grid-column:1}.form-row{grid-template-columns:1fr}.service-grid h3{font-size:23px}.testimonial{padding:75px 25px}}
 @media(max-width:430px){.hero h1{font-size:54px}.service-grid{grid-template-columns:1fr}.service-grid article{border-right:0;border-bottom:1px solid #ccd3cc}.pills{flex-wrap:wrap}.pills button{min-width:30%}}
 
+/* Readability pass: preserve the editorial hierarchy while removing overly tiny UI text. */
+.brand small{font-size:9px}
+.nav nav{font-size:13px}
+.eyebrow,.hero-note{font-size:11px}
+.scroll-note{font-size:9px}
+.section-no{font-size:10px}
+.text-link,.dark-link{font-size:11px;font-weight:500;padding-bottom:10px}
+.filters button,.pills button{font-size:11px;padding:11px 15px}
+.card-overlay>span{font-size:10px}
+.card-overlay p,.gallery-controls span{font-size:11px}
+.service-grid span{font-size:10px}
+.service-grid p{font-size:13px;line-height:1.7}
+.builder-card>label{font-size:10px}
+.swatches button{font-size:12px;padding:11px}
+.concept small{font-size:9px}
+.concept span{font-size:11px}
+.full-btn{font-size:10px;font-weight:500;padding:18px 20px}
+.steps p{font-size:14px}
+.testimonial p{font-size:10px}
+.contact-lines a{font-size:13px}
+.inquire label{font-size:10px}
+footer>p{font-size:12px}
+footer>div{font-size:11px}
+footer>small{font-size:9px}
+
+@media(max-width:800px){
+  .nav nav{font-size:17px}
+  .hero-copy p{font-size:15px;line-height:1.7}
+  .service-grid p,.steps p{font-size:14px}
+}
+
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-image{transform:none!important}*{transition:none!important}}
