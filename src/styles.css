@@ -937,6 +937,25 @@ img { display: block; max-width: 100%; }
   transform: translateY(-1px);
 }
 .full-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+.builder-secondary-btn {
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #a3b5a8;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 14px 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.builder-secondary-btn:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(255, 255, 255, 0.03);
+}
 
 /* ───────────────────────── PROCESS ───────────────────────── */
 .process { padding: 130px 8vw; }
@@ -1051,6 +1070,15 @@ img { display: block; max-width: 100%; }
 .inquire textarea { min-height: 74px; resize: vertical; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
 .form-error { font-size: 12px; color: #f4a582; margin: -8px 0 12px; line-height: 1.5; }
+.field-error {
+  font-size: 11px;
+  color: #ff8585;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-top: 3px;
+  display: block;
+  animation: fadeIn 0.3s ease-out both;
+}
 .success { text-align: center; padding-top: 60px; }
 .success > svg {
   border: 1px solid #ffffff44;

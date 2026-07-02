@@ -167,6 +167,9 @@ function StatsBar() {
 
 // ── Lightbox ─────────────────────────────────────────────────────────────────
 function Lightbox({ images, index, onClose, onNav }) {
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
   useEffect(() => {
     const handler = (e) => {
       if (e.key === 'Escape') onClose();
@@ -179,29 +182,118 @@ function Lightbox({ images, index, onClose, onNav }) {
 
   if (index === null) return null;
   const item = images[index];
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diffX = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+    if (diffX > threshold) {
+      onNav(1);
+    } else if (diffX < -threshold) {
+      onNav(-1);
+    }
+  };
+
   return (
-    <div className={`lightbox ${index !== null ? 'open' : ''}`} onClick={onClose}>
-      <button className="lightbox-close" onClick={onClose}><X size={20} /></button>
-      <button className="lightbox-nav prev" onClick={(e) => { e.stopPropagation(); onNav(-1); }}><ChevronLeft /></button>
+    <div
+      className={`lightbox ${index !== null ? 'open' : ''}`}
+      onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      <button className="lightbox-close" onClick={onClose} aria-label="Close lightbox"><X size={20} /></button>
+      <button className="lightbox-nav prev" onClick={(e) => { e.stopPropagation(); onNav(-1); }} aria-label="Previous image"><ChevronLeft /></button>
       <img src={item.img} alt={item.title} onClick={(e) => e.stopPropagation()} />
-      <button className="lightbox-nav next" onClick={(e) => { e.stopPropagation(); onNav(1); }}><ChevronRight /></button>
+      <button className="lightbox-nav next" onClick={(e) => { e.stopPropagation(); onNav(1); }} aria-label="Next image"><ChevronRight /></button>
       <div className="lightbox-caption">{item.title} — {item.meta}</div>
     </div>
   );
 }
 
 // ── Enquiry form ─────────────────────────────────────────────────────────────
-function EnquiryForm() {
+const getTodayLocalDate = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+function EnquiryForm({ builderConcept }) {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const formRef = useRef(null);
 
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [occasion, setOccasion] = useState('Wedding');
+  const [eventDate, setEventDate] = useState('');
+  const [message, setMessage] = useState('');
+
+  const [hasManuallyEditedOccasion, setHasManuallyEditedOccasion] = useState(false);
+  const [hasManuallyEditedMessage, setHasManuallyEditedMessage] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+
+  useEffect(() => {
+    if (builderConcept) {
+      if (!hasManuallyEditedOccasion) {
+        const mapped = builderConcept.event === 'Party' ? 'Private party' : builderConcept.event;
+        setOccasion(mapped);
+      }
+      if (!hasManuallyEditedMessage) {
+        setMessage(`I'd love to plan a ${builderConcept.mood.toLowerCase()} ${builderConcept.event.toLowerCase()} with a ${builderConcept.palette} palette. Let's discuss details!`);
+      }
+    }
+  }, [builderConcept, hasManuallyEditedOccasion, hasManuallyEditedMessage]);
+
+  const validateField = (fieldName, value) => {
+    let err = '';
+    if (fieldName === 'name') {
+      if (!value.trim()) err = 'Name is required.';
+      else if (value.trim().length < 2) err = 'Name must be at least 2 characters.';
+    }
+    if (fieldName === 'phone') {
+      const clean = value.replace(/[^\d+]/g, '');
+      if (!value.trim()) err = 'Phone number is required.';
+      else if (!/^(?:\+94|0)?7\d{8}$/.test(clean)) err = 'Please enter a valid Sri Lankan mobile number (e.g. 077 111 4345).';
+    }
+    return err;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const nameErr = validateField('name', name);
+    const phoneErr = validateField('phone', phone);
+
+    if (nameErr || phoneErr) {
+      setErrors({ name: nameErr, phone: phoneErr });
+      setTouched({ name: true, phone: true });
+      return;
+    }
+
     setSending(true);
     setError('');
-    const data = Object.fromEntries(new FormData(formRef.current));
+
+    const data = {
+      name,
+      phone,
+      occasion,
+      event_date: eventDate,
+      message,
+    };
+
     try {
       const res = await fetch(`https://formsubmit.co/ajax/${FORM_EMAIL}`, {
         method: 'POST',
@@ -217,13 +309,26 @@ function EnquiryForm() {
     }
   };
 
+  const resetForm = () => {
+    setName('');
+    setPhone('');
+    setOccasion('Wedding');
+    setEventDate('');
+    setMessage('');
+    setErrors({});
+    setTouched({});
+    setHasManuallyEditedOccasion(false);
+    setHasManuallyEditedMessage(false);
+    setSent(false);
+  };
+
   if (sent) {
     return (
       <div className="success">
         <Check />
         <h3>Your story is on its way.</h3>
         <p>Thank you. We'll be in touch within 24 hours.</p>
-        <button onClick={() => { setSent(false); formRef.current?.reset(); }} type="button">
+        <button onClick={resetForm} type="button">
           Send another enquiry
         </button>
       </div>
@@ -234,18 +339,83 @@ function EnquiryForm() {
     <form ref={formRef} onSubmit={handleSubmit} noValidate>
       <input type="text" name="_honey" style={{ display: 'none' }} />
       <input type="hidden" name="_captcha" value="false" />
-      <label>Your name<input name="name" required placeholder="e.g. Nethmi &amp; Kasun" /></label>
-      <label>Phone / WhatsApp<input name="phone" required type="tel" placeholder="07X XXX XXXX" /></label>
+      <label>
+        Your name
+        <input
+          name="name"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+            if (touched.name) {
+              setErrors(prev => ({ ...prev, name: validateField('name', e.target.value) }));
+            }
+          }}
+          onBlur={() => {
+            setTouched(prev => ({ ...prev, name: true }));
+            setErrors(prev => ({ ...prev, name: validateField('name', name) }));
+          }}
+          placeholder="e.g. Nethmi &amp; Kasun"
+        />
+        {errors.name && <span className="field-error">{errors.name}</span>}
+      </label>
+      <label>
+        Phone / WhatsApp
+        <input
+          name="phone"
+          type="tel"
+          value={phone}
+          onChange={(e) => {
+            setPhone(e.target.value);
+            if (touched.phone) {
+              setErrors(prev => ({ ...prev, phone: validateField('phone', e.target.value) }));
+            }
+          }}
+          onBlur={() => {
+            setTouched(prev => ({ ...prev, phone: true }));
+            setErrors(prev => ({ ...prev, phone: validateField('phone', phone) }));
+          }}
+          placeholder="07X XXX XXXX"
+        />
+        {errors.phone && <span className="field-error">{errors.phone}</span>}
+      </label>
       <div className="form-row">
-        <label>Occasion
-          <select name="occasion">
+        <label>
+          Occasion
+          <select
+            name="occasion"
+            value={occasion}
+            onChange={(e) => {
+              setOccasion(e.target.value);
+              setHasManuallyEditedOccasion(true);
+            }}
+          >
             <option>Wedding</option><option>Birthday</option><option>Proposal</option>
             <option>Bridal shower</option><option>Private party</option><option>Corporate event</option>
           </select>
         </label>
-        <label>Event date<input name="event_date" type="date" /></label>
+        <label>
+          Event date
+          <input
+            name="event_date"
+            type="date"
+            value={eventDate}
+            min={getTodayLocalDate()}
+            onChange={(e) => setEventDate(e.target.value)}
+          />
+        </label>
       </div>
-      <label>Tell us about your vision<textarea name="message" placeholder="The mood, venue, guest count, colours you love…" /></label>
+      <label>
+        Tell us about your vision
+        <textarea
+          name="message"
+          value={message}
+          onChange={(e) => {
+            setMessage(e.target.value);
+            setHasManuallyEditedMessage(true);
+          }}
+          placeholder="The mood, venue, guest count, colours you love…"
+        />
+      </label>
       {error && <p className="form-error">{error}</p>}
       <button className="full-btn" type="submit" disabled={sending}>
         {sending ? 'Sending…' : <><span>Send my enquiry</span><ArrowRight /></>}
@@ -270,6 +440,28 @@ function App() {
 
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diffX = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+    if (diffX > threshold) {
+      next(1);
+    } else if (diffX < -threshold) {
+      next(-1);
+    }
+  };
+
   const filtered = useMemo(
     () => filter === 'All' ? collections : collections.filter(x => x.type === filter),
     [filter]
@@ -433,16 +625,30 @@ function App() {
             </div>
           </div>
 
-          <div className="carousel-viewport" ref={viewportRef}>
+          <div
+            className="carousel-viewport"
+            ref={viewportRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div className="carousel-track" ref={trackRef} role="list">
               {filtered.map((item, i) => (
                 <article
                   key={`${item.title}-${filter}`}
                   className={i === slide ? 'active' : ''}
                   role="listitem"
+                  tabIndex={0}
                   onClick={() => {
                     if (i === slide) openLightbox(i);
                     else setSlide(i);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      if (i === slide) openLightbox(i);
+                      else setSlide(i);
+                    }
                   }}
                 >
                   <img src={item.img} alt={item.title} loading="lazy" decoding="async" />
@@ -546,6 +752,9 @@ function App() {
             <a href={whatsapp} target="_blank" rel="noreferrer" className="full-btn">
               Bring this vision to life <ArrowRight />
             </a>
+            <a href="#inquire" className="builder-secondary-btn">
+              Or, request a detailed proposal below
+            </a>
           </div>
         </section>
 
@@ -597,7 +806,7 @@ function App() {
               </div>
             </Reveal>
           </div>
-          <Reveal delay={0.2}><EnquiryForm /></Reveal>
+          <Reveal delay={0.2}><EnquiryForm builderConcept={{ event, mood, palette }} /></Reveal>
         </section>
 
         {/* ── Footer ── */}
