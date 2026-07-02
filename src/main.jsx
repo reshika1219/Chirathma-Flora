@@ -2,14 +2,14 @@ import React, { useEffect, useLayoutEffect, useRef, useState, useCallback, useMe
 import { createRoot } from 'react-dom/client';
 import {
   ArrowDownRight, ArrowRight, ArrowUp, Check, ChevronLeft, ChevronRight,
-  Flower2, Mail, Menu, Phone, Sparkles, X
+  Flower2, Mail, Menu, MessageSquare, Phone, Sparkles, X
 } from 'lucide-react';
 import './styles.css';
 
 // ── Config ───────────────────────────────────────────────────────────────────
 const FORM_EMAIL = 'chirathmaflora33@gmail.com';
-const phone      = '94771114345';
-const phone2     = '94705564964';
+const phone      = '94777166655'; // WhatsApp
+const phone_call = '94771114345'; // Normal call
 const facebook   = 'https://www.facebook.com/chirathmaflora/';
 const instagram  = 'https://www.instagram.com/chirathma_flora/';
 const tiktok     = 'https://www.tiktok.com/@chirathma_flora';
@@ -800,8 +800,8 @@ function App() {
             </Reveal>
             <Reveal delay={0.3}>
               <div className="contact-lines">
-                <a href="tel:+94771114345"><Phone size={16} />077 111 4345</a>
-                <a href="tel:+94705564964"><Phone size={16} />070 556 4964</a>
+                <a href={`tel:+${phone_call}`}><Phone size={16} />077 111 4345</a>
+                <a href={`https://wa.me/${phone}`} target="_blank" rel="noreferrer"><MessageSquare size={16} />077 716 6655 (WhatsApp)</a>
                 <a href="mailto:chirathmaflora33@gmail.com"><Mail size={16} />chirathmaflora33@gmail.com</a>
               </div>
             </Reveal>
